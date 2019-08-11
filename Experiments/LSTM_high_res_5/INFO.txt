@@ -1,0 +1,49 @@
+ORIGIN_LATITUDE       = 27.0
+ORIGIN_LONGITUDE      = 127.0
+LEFT_BORDER           = 0
+RIGHT_BORDER          = 2000
+DOWN_BORDER           = 0
+UP_BORDER             = 2500
+N_CELLS_HOR_BIG       = 800
+N_CELLS_VER_BIG       = 1000
+N_CELLS_HOR_NORM      = 200
+N_CELLS_VER_NORM      = 250
+ 
+OBSERVED_DAYS         = 64
+DAYS_TO_PREDICT_AFTER = 10
+DAYS_TO_PREDICT_BEFOR = 50
+TESTING_DAYS          = 1000
+HEAVY_QUAKE_THRES     = 3.5
+LEARNING_RATE         = 0.0003
+LR_DECAY              = 10.0
+N_CYCLES              = 1
+EARTHQUAKE_WEIGHT     = 50000000.0
+TRAIN_SHAPE           = torch.Size([8591, 1, 200, 250])
+TEST__SHAPE           = torch.Size([1000, 1, 200, 250])
+ 
+EMB_SIZE              = 16
+HID_SIZE              = 32
+ROC_AUC               = 0.9524915393721044
+Average_precision     = 0.05366881143484687
+
+=======================
+Threshold =  0.2
+-----------------------
+[[1.42493614e-03 1.81978720e-04]
+ [1.11858295e-01 8.86534790e-01]]
+=======================
+Threshold =  0.4
+-----------------------
+[[1.24017024e-03 3.66744689e-04]
+ [4.49845541e-02 9.53408531e-01]]
+=======================
+Threshold =  0.6
+-----------------------
+[[1.16785106e-03 4.39063830e-04]
+ [3.56216809e-02 9.62771404e-01]]
+=======================
+Threshold =  0.8
+-----------------------
+[[1.08465955e-03 5.22255308e-04]
+ [2.85374462e-02 9.69855639e-01]]
+=======================
