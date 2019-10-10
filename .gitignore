@@ -1,3 +1,5 @@
 /.ipynb_checkpoints/*
 /Data/*
 /RTL_features/*
+/final_notebooks/Data/*
+/final_notebooks/.ipynb_checkpoints/*
