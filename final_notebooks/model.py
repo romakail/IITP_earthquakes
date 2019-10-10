@@ -34,14 +34,21 @@ class ConvBlock(nn.Module):
 class LSTMCell (nn.Module):
     
     def __init__ (self,
+                  frequency_map,
                   embedding_size=16,
                   hidden_state_size=32,
                   n_cells_hor=200,
-                  n_cells_ver=250):
+                  n_cells_ver=250,
+                  device = torch.device('cpu')):
         super(self.__class__,self).__init__()
         
         self.n_cells_hor = n_cells_hor
         self.n_cells_ver = n_cells_ver
+        
+        self.freq_map = Variable(torch.cat([1 - frequency_map.to(device),
+                                            frequency_map.to(device)],
+                                           dim=0).unsqueeze(0),
+                                 requires_grad=True)
         
         self.emb_size = embedding_size
         self.hid_size = hidden_state_size
@@ -56,7 +63,8 @@ class LSTMCell (nn.Module):
         self.hidden_to_result = nn.Sequential (ConvBlock (hidden_state_size, 
                                                           2, 
                                                           kernel_size=3),
-                                               nn.Softmax (dim=1))
+                                               nn.Softmax (dim=1),
+                                               )
         
         self.f_t = nn.Sequential (ConvBlock(self.hid_size + self.emb_size,
                                             self.hid_size,
@@ -92,7 +100,19 @@ class LSTMCell (nn.Module):
         assert prev_h.shape == next_h.shape
         assert prev_c.shape == next_c.shape
         
-        return (next_c, next_h), self.hidden_to_result(next_h)
+        correction = self.hidden_to_result(next_h)[:, 0, :, :]
+        prediction = torch.cat([self.freq_map for i in range(correction.shape[0])], dim=0)
+        
+#         prediction[:, 0, :, :] -= (correction + 0.001) 
+#         prediction[:, 1, :, :] += (correction + 0.001)
+
+        prediction[:, 0, :, :] -= correction 
+        prediction[:, 1, :, :] += correction
+
+#         print (prediction.device)
+#         print (correction.device)
+        
+        return (next_c, next_h), prediction
         
     def init_state (self, batch_size, device=torch.device("cpu")):
         return (Variable(torch.zeros(batch_size,
