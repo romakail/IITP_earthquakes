@@ -2,6 +2,14 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 
+N_CYCLES = 1
+LEARNING_RATE = 0.0003
+LR_DECAY = 10.
+EARTHQUAKE_WEIGHT = 10000.
+
+EMB_SIZE = 16
+HID_SIZE = 32
+
 class ConvBlock(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=1):
         super(ConvBlock, self).__init__()
@@ -103,14 +111,8 @@ class LSTMCell (nn.Module):
         correction = self.hidden_to_result(next_h)[:, 0, :, :]
         prediction = torch.cat([self.freq_map for i in range(correction.shape[0])], dim=0)
         
-#         prediction[:, 0, :, :] -= (correction + 0.001) 
-#         prediction[:, 1, :, :] += (correction + 0.001)
-
         prediction[:, 0, :, :] -= correction 
         prediction[:, 1, :, :] += correction
-
-#         print (prediction.device)
-#         print (correction.device)
         
         return (next_c, next_h), prediction
         
